@@ -1,0 +1,39 @@
+{
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.13/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.13",
+  "version": "1.0.0",
+  "id": "93dfc561-f3e1-4ee2-820a-b775712c7eca",
+  "packageName": "com.gyzertech.schedubot",
+  "localizationInfo": {
+    "defaultLanguageTag": "en",
+    "defaultLanguageFile": "en.json",
+    "additionalLanguages": [
+      {
+        "languageTag": "es",
+        "file": "es.json"
+      }
+    ]
+  },
+  "name": {
+    "short": "ScheduBot",
+    "full": "ScheduBot"
+  },
+  "description": {
+    "short": "ScheduBot description",
+    "full": "ScheduBot description"
+  },
+  "icons": {
+    "color": "color-icon.png",
+    "outline": "outline-icon.png"
+  },
+  "bots": [
+    {
+      "botId": "93dfc561-f3e1-4ee2-820a-b775712c7eca",
+      "scopes": ["personal", "team", "groupchat"],
+      "supportsFiles": false,
+      "isNotificationOnly": false
+    }
+  ],
+  "permissions": ["identity", "messageTeamMembers"],
+  "validDomains": ["localhost", "127.0.0.1"]
+}
