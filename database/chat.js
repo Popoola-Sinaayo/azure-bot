@@ -3,12 +3,17 @@ const mongoose = require("mongoose");
 const chatSchema = new mongoose.Schema({
   conversationId: {
     type: String,
-    required: true,
   },
-  userContext: {
+  userId: {
     type: String,
     required: true,
-    default: {},
+  },
+  name: {
+    type: String,
+  },
+  requestForName: {
+    type: Boolean,
+    default: false,
   },
 });
 
