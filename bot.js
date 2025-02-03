@@ -13,6 +13,43 @@ var adapter = new botbuilder.BotFrameworkAdapter({
   appPassword: process.env.APP_PASSWORD,
 });
 
+// Load environment variables
+const endpoint = process.env.AZURE_QNA_ENDPOINT; // Example: https://your-resource-name.cognitiveservices.azure.com
+const apiKey = process.env.AZURE_QNA_API_KEY;   // Your QnA service key
+const projectName = process.env.AZURE_QNA_PROJECT; // Your QnA project name
+const deploymentName = "production"; 
+
+// Initialize the SDK client
+
+async function queryQnA(question) {
+   try {
+     const url = `${endpoint}/language/:query-knowledgebases?projectName=${projectName}&deploymentName=${deploymentName}&api-version=2021-10-01`;
+
+     const headers = {
+       "Ocp-Apim-Subscription-Key": apiKey,
+       "Content-Type": "application/json",
+     };
+
+     const body = {
+       question: question,
+       top: 1,
+     };
+
+     const response = await axios.post(url, body, { headers });
+
+     if (response.data.answers.length > 0) {
+       return response.data.answers[0].answer; // Return the best answer
+     } else {
+       return "No answer found.";
+     }
+   } catch (error) {
+     console.error(
+       "Error querying Azure QnA:",
+       error.response?.data || error.message
+     );
+   }
+}
+
 // const botMemory = new botbuilder.MemoryStorage();
 // const conversationState = new botbuilder.ConversationState(botMemory);
 
@@ -135,26 +172,26 @@ server.post("/api/messages", (req, res, next) => {
         );
 
         try {
-          console.log("sending to teams");
+          // console.log("sending to teams");
 
-          const utterance = turnContext.activity.text;
+          // const utterance = turnContext.activity.text;
 
-          const data = await client.conversations.sendToConversation(
-            RandomChannelID,
-            {
-              type: "message",
-              channelData: {
-                channel: {
-                  id: "msteams",
-                },
-              },
-              from: {
-                id: turnContext.activity.from.id,
-                name: "webchat",
-              },
-              text: `${utterance} -- ${user.name}`,
-            }
-          );
+          // const data = await client.conversations.sendToConversation(
+          //   RandomChannelID,
+          //   {
+          //     type: "message",
+          //     channelData: {
+          //       channel: {
+          //         id: "msteams",
+          //       },
+          //     },
+          //     from: {
+          //       id: turnContext.activity.from.id,
+          //       name: "webchat",
+          //     },
+          //     text: `${utterance} -- ${user.name}`,
+          //   }
+          // );
           // console.log(data);
           // if (!user) {
           //   await Chat.create({
@@ -162,8 +199,11 @@ server.post("/api/messages", (req, res, next) => {
           //     userId: turnContext.activity.conversation.id,
           //   });
           // } else {
-          user.conversationId = data.id;
-          await user.save();
+          const response = await queryQnA(turnContext.activity.text);
+          // console.log(response);
+          await turnContext.sendActivity(response);
+          // user.conversationId = data.id;
+          // await user.save();
           // }
           // const teams = new botbuilder.TeamsActivityHandler();
         } catch (error) {

@@ -9,8 +9,10 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@azure/ai-language-text": "^1.1.0",
     "axios": "^1.7.9",
     "botbuilder": "^4.23.1",
+    "botbuilder-ai": "^4.23.1",
     "dotenv": "^16.4.7",
     "mongoose": "^8.9.5",
     "restify": "^11.1.0"
